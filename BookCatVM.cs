@@ -6,12 +6,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BookCat
 {
     class BookCatVM : INotifyPropertyChanged
     {
         protected Book selectedBook;
+        protected Book editedBook;
         protected bool editMode = false;
         protected readonly ObservableCollection<Book> bookList;
         public ReadOnlyObservableCollection<Book> BookList { get; }
@@ -46,6 +48,7 @@ namespace BookCat
             {
                 selectedBook = value;
                 OnPropertyChanged("SelectedBook");
+                OnPropertyChanged("CanEditBook");
             }
         }
         public bool EditMode
@@ -56,9 +59,11 @@ namespace BookCat
                 editMode = value;
                 OnPropertyChanged("EditMode");
                 OnPropertyChanged("NotEditMode");
+                OnPropertyChanged("CanEditBook");
             }
         }
         public bool NotEditMode => !editMode;
+        public bool CanEditBook => selectedBook != null && !editMode;
         //=========================Команды=============================================
         protected RelayCommand newBookCommand; //Создать новую книгу с пустыми полями
         public RelayCommand NewBookCommand
@@ -74,7 +79,34 @@ namespace BookCat
                     }));
             }
         }
+        protected RelayCommand removeBookCommand;//Удалить выбранную книгу
+        public RelayCommand RemoveBookCommand
+        {
+            get
+            {
+                return removeBookCommand ??
+                    (removeBookCommand = new RelayCommand(obj =>
+                    {
+                        bookList.Remove(selectedBook);
+                        SelectedBook = null;
+                    }));
+            }
+        }
         protected RelayCommand editBookCommand;//Редактировать выбранную книгу
+        public RelayCommand EditBookCommand
+        {
+            get
+            {
+                return editBookCommand ??
+                    (editBookCommand = new RelayCommand(obj =>
+                    {
+                        editedBook = selectedBook;
+                        selectedBook = new Book();
+                        selectedBook.CopyFrom(editedBook);
+                        EditMode = true;
+                    }));
+            }
+        }
         protected RelayCommand saveBookCommand;//Сохранить изменения в книге
         public RelayCommand SaveBookCommand
         {
@@ -83,13 +115,60 @@ namespace BookCat
                 return saveBookCommand ??
                     (saveBookCommand = new RelayCommand(obj =>
                     {
-                        bookList.Insert(0, selectedBook);
+                        if(editedBook != null)
+                        {
+                            editedBook.CopyFrom(selectedBook);
+                            SelectedBook = editedBook;
+                            editedBook = null;
+                        }
+                        else
+                            bookList.Insert(0, selectedBook);
                         EditMode = false;
                     }));
             }
         }
         protected RelayCommand discardChangesCommand;//Отменить все несохраннёные изменения
+        public RelayCommand DiscardChangesCommand
+        {
+            get
+            {
+                return discardChangesCommand ??
+                    (discardChangesCommand = new RelayCommand(obj =>
+                    {
+                        if (editedBook != null)
+                        {
+                            SelectedBook = editedBook;
+                            editedBook = null;
+                        }
+                        else
+                            SelectedBook = null;
+                        EditMode = false;
+                    }));
+            }
+        }
         protected RelayCommand showAuthorsWindowCommand;//Выбрать автора из списка
+        public RelayCommand ShowAuthorsWindowCommand
+        {
+            get
+            {
+                return showAuthorsWindowCommand ??
+                     (showAuthorsWindowCommand = new RelayCommand(obj =>
+                     {
+                         MessageBox.Show("Выбор автора");
+                     }));
+            }
+        }
         protected RelayCommand showDBWindowCommand;//Показать настройки хранилища
+        public RelayCommand ShowDBWindowCommand
+        {
+            get
+            {
+                return showDBWindowCommand ??
+                     (showDBWindowCommand = new RelayCommand(obj =>
+                     {
+                        MessageBox.Show("Настройки базы данных");
+                     }));
+            }
+        }
     }
 }

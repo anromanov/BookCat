@@ -48,24 +48,34 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Command="{Binding NewBookCommand}">+</Button>
+            <Button Command="{Binding NewBookCommand}" Width="90" >Добавить</Button>
+            <Button Command="{Binding RemoveBookCommand}" Width="90" Visibility="{Binding CanEditBook, UpdateSourceTrigger=PropertyChanged,
+                 Converter={StaticResource BooleanToVisibilityConverter}}">Удалить</Button>
+            <Button Command="{Binding ShowDBWindowCommand}" Width="90" HorizontalAlignment="Right">Настройки</Button>
         </StackPanel>
         <StackPanel Grid.Column="1" >
             <TextBlock Text="Выбранная книга"  />
             <TextBlock Text="Автор" />
             <TextBlock Text="{Binding SelectedBook.Author.FullName, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock Text="Названеие" />
+            <TextBlock Text="Название" />
             <TextBox Text="{Binding SelectedBook.Name, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text="Год издания" />
             <TextBox Text="{Binding SelectedBook.PublicationYear, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}"/>
+            
             <TextBlock Text="ISBN" />
             <TextBox Text="{Binding SelectedBook.ISBN, UpdateSourceTrigger=PropertyChanged}" 
                      IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
-            <Button Command="{Binding SaveBookCommand}" Width="90" Visibility="{Binding EditMode, 
+            <Button Command="{Binding EditBookCommand}" Width="90" Visibility="{Binding CanEditBook, 
                 UpdateSourceTrigger=PropertyChanged,
+                             Converter={StaticResource BooleanToVisibilityConverter}}">Изменить</Button>
+            <Button Command="{Binding SaveBookCommand}" Width="90" 
+                    Visibility="{Binding EditMode, UpdateSourceTrigger=PropertyChanged,
                              Converter={StaticResource BooleanToVisibilityConverter}}">Сохранить</Button>
+            <Button Command="{Binding DiscardChangesCommand}" Width="90" Visibility="{Binding EditMode, 
+                UpdateSourceTrigger=PropertyChanged,
+                             Converter={StaticResource BooleanToVisibilityConverter}}">Отменить</Button>
         </StackPanel>
     </Grid>
 </Window>

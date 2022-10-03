@@ -26,6 +26,16 @@ namespace BookCat
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+        public void CopyFrom(Book book)
+        {
+            Id = book.Id;
+            Name = book.Name;
+            PublicationYear = book.PublicationYear;
+            ISBN = book.ISBN;
+            Annotation = book.Annotation;
+            Cover = book.Cover;
+            Author = book.Author;
+        }
         //=========================Свойства============================================
         public string Name
         {
