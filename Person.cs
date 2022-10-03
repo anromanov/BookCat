@@ -11,7 +11,6 @@ namespace BookCat
         protected string firstName;//Имя
         protected string middleName;//Отчество
         protected string lastName;//Фамилия
-        protected DateTime birthDate;//Дата рождения
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -58,14 +57,5 @@ namespace BookCat
                 OnPropertyChanged("Id");
             }
         }
-        public DateTime BirthDate
-        {
-            get => birthDate;
-            set
-            {
-                birthDate = value;
-                OnPropertyChanged("BirthDate");
-            }
-        }
-    }
+     }
 }

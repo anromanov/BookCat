@@ -1,0 +1,32 @@
+﻿<Window x:Class="BookCat.PersonEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookCat"
+        mc:Ignorable="d"
+        Title="Автор" Height="250" Width="800">
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="16" Text="Фамилия" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" FontSize="16" Text="Имя" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" FontSize="16" Text="Отчество" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"/>
+        <TextBox Grid.Row="0" Grid.Column="1" FontSize="18" Text="{Binding EditedPerson.LastName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+        <TextBox Grid.Row="1" Grid.Column="1" FontSize="18" Text="{Binding EditedPerson.FirstName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+        <TextBox Grid.Row="2" Grid.Column="1" FontSize="18" Text="{Binding EditedPerson.MiddleName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+        <StackPanel Grid.Row="3" Grid.Column="1"  Margin="5" Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Button IsDefault ="True" Command="{Binding SaveAuthorCommand}">Сохранить</Button>
+            <TextBlock FontSize="14" Text="  " />
+            <Button IsCancel="True">Отменить</Button>
+        </StackPanel>
+    </Grid>
+</Window>

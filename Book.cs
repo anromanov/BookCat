@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Runtime.CompilerServices;
+using System.Windows.Media.Imaging;
 
 namespace BookCat
 {
@@ -17,7 +18,7 @@ namespace BookCat
         protected int publicationYear;//Год издания
         protected long isbn;//ISBN
         protected string annotation;//Краткое содержание
-        protected Image cover;//Изображение обложки
+        protected BitmapSource cover;//Изображение обложки
         protected Person author;//Автор
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -91,7 +92,7 @@ namespace BookCat
                 OnPropertyChanged("Author");
             }
         }
-        public Image Cover
+        public BitmapSource Cover
         {
             get => cover;
             set

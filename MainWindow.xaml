@@ -54,17 +54,54 @@
             <Button Command="{Binding ShowDBWindowCommand}" Width="90" HorizontalAlignment="Right">Настройки</Button>
         </StackPanel>
         <StackPanel Grid.Column="1" >
-            <TextBlock Text="Выбранная книга"  />
-            <TextBlock Text="Автор" />
+            <TextBlock Text="Выбранная книга"  Height="40"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Автор" />
+                <Button Grid.Column="1" Command="{Binding ShowAuthorsWindowCommand}" Visibility="{Binding EditMode, 
+                UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">...</Button>
+            </Grid>
             <TextBlock Text="{Binding SelectedBook.Author.FullName, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock Text="Название" />
+            <TextBlock FontSize="8"/>
+            <TextBlock Text="Название"/>
             <TextBox Text="{Binding SelectedBook.Name, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Text="Год издания" />
-            <TextBox Text="{Binding SelectedBook.PublicationYear, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}"/>
-            
-            <TextBlock Text="ISBN" />
-            <TextBox Text="{Binding SelectedBook.ISBN, UpdateSourceTrigger=PropertyChanged}" 
+            <TextBlock FontSize="8"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width ="90" />
+                    <ColumnDefinition Width ="110" />
+                    <ColumnDefinition Width ="80" />
+                    <ColumnDefinition Width ="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Год издания" />
+                <TextBox Grid.Column="1" Text="{Binding SelectedBook.PublicationYear, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Grid.Column="2" Text="ISBN" HorizontalAlignment="Center"/>
+                <TextBox Grid.Column="3" Text="{Binding SelectedBook.ISBN, UpdateSourceTrigger=PropertyChanged}" 
                      IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+            <TextBlock FontSize="8"/>
+            <TextBlock Text="Краткое содержание" />
+            <TextBox Text="{Binding SelectedBook.Annotation, UpdateSourceTrigger=PropertyChanged}" 
+                     IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}" MinHeight="80"
+                      TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
+            <TextBlock FontSize="8"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width ="*" />
+                    <ColumnDefinition Width ="60" />
+                    <ColumnDefinition Width ="60" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Изображение обложки" VerticalAlignment="Bottom"/>
+                <Button Grid.Column="1" Command="{Binding RemoveCoverImageCommand}" Visibility="{Binding EditMode, 
+                UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Red" FontWeight="Bold">X</Button>
+                <Button Grid.Column="2" Command="{Binding AddCoverImageCommand}" Visibility="{Binding EditMode, 
+                UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">...</Button>
+            </Grid>
+            <Image Source="{Binding SelectedBook.Cover, UpdateSourceTrigger=PropertyChanged}" Margin="20" MinWidth="200" MinHeight="100" HorizontalAlignment="Center"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
             <Button Command="{Binding EditBookCommand}" Width="90" Visibility="{Binding CanEditBook, 

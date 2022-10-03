@@ -17,3 +17,25 @@ F:\Александр\Visual Studio Projects\BookCat\BookCat\bin\Debug\Prism.dll
 F:\Александр\Visual Studio Projects\BookCat\BookCat\bin\Debug\Prism.pdb
 F:\Александр\Visual Studio Projects\BookCat\BookCat\bin\Debug\Prism.xml
 F:\Александр\Visual Studio Projects\BookCat\BookCat\obj\Debug\BookCat.csproj.CopyComplete
+F:\Документы\WPF\BookCat\bin\Debug\BookCat.exe.config
+F:\Документы\WPF\BookCat\bin\Debug\BookCat.exe
+F:\Документы\WPF\BookCat\bin\Debug\BookCat.pdb
+F:\Документы\WPF\BookCat\bin\Debug\Prism.dll
+F:\Документы\WPF\BookCat\bin\Debug\Prism.pdb
+F:\Документы\WPF\BookCat\bin\Debug\Prism.xml
+F:\Документы\WPF\BookCat\obj\Debug\BookCat.csprojAssemblyReference.cache
+F:\Документы\WPF\BookCat\obj\Debug\MainWindow.g.cs
+F:\Документы\WPF\BookCat\obj\Debug\App.g.cs
+F:\Документы\WPF\BookCat\obj\Debug\BookCat_MarkupCompile.cache
+F:\Документы\WPF\BookCat\obj\Debug\BookCat_MarkupCompile.lref
+F:\Документы\WPF\BookCat\obj\Debug\MainWindow.baml
+F:\Документы\WPF\BookCat\obj\Debug\BookCat.g.resources
+F:\Документы\WPF\BookCat\obj\Debug\BookCat.Properties.Resources.resources
+F:\Документы\WPF\BookCat\obj\Debug\BookCat.csproj.GenerateResource.cache
+F:\Документы\WPF\BookCat\obj\Debug\BookCat.csproj.CopyComplete
+F:\Документы\WPF\BookCat\obj\Debug\BookCat.exe
+F:\Документы\WPF\BookCat\obj\Debug\BookCat.pdb
+F:\Документы\WPF\BookCat\obj\Debug\AuthorsWindow.g.cs
+F:\Документы\WPF\BookCat\obj\Debug\AuthorsWindow.baml
+F:\Документы\WPF\BookCat\obj\Debug\PersonEditWindow.g.cs
+F:\Документы\WPF\BookCat\obj\Debug\PersonEditWindow.baml
