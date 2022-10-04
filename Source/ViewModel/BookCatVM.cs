@@ -13,7 +13,7 @@ namespace BookCat
         protected ApplicationContext db = new ApplicationContext();
         protected Book selectedBook;
         protected Book editedBook;
-        protected BitmapSource selectedBookCover; 
+        //protected BitmapSource selectedBookCover; 
         protected bool editMode = false;
         protected byte[] emptyBitmap;
         protected readonly ObservableCollection<Book> bookList;
@@ -27,8 +27,12 @@ namespace BookCat
             db.BookList.ToList();
             bookList = db.BookList.Local.ToObservableCollection();
             authorList = db.AuthorList.Local.ToObservableCollection();
-            BitmapImage em = new BitmapImage();
-           // emptyBitmap = BitmapConvertorTools.BitmapSourceToByte(em);
+            System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new System.Uri("Image/Empty.jpg", System.UriKind.RelativeOrAbsolute);
+            bi.DecodePixelWidth = 200;
+            bi.EndInit();
+            emptyBitmap = BitmapConvertorTools.BitmapSourceToByte((System.Windows.Media.Imaging.BitmapSource)bi); BitmapImage em = new BitmapImage();
                 /*new ObservableCollection<Person>
             {
                 new Person{FirstName = "Иван", MiddleName = "Иванович", LastName = "Иванов"},
@@ -62,7 +66,7 @@ namespace BookCat
                     selectedBook = value;
                     OnPropertyChanged("SelectedBook");
                     OnPropertyChanged("CanEditBook");
-                    selectedBookCover = (selectedBook != null && selectedBook.Cover != null ? BitmapConvertorTools.ByteToBitmapSource(selectedBook.Cover) : null);
+                    //selectedBookCover = (selectedBook != null && selectedBook.Cover != null ? BitmapConvertorTools.ByteToBitmapSource(selectedBook.Cover) : null);
                 }
             }
         }
@@ -77,7 +81,7 @@ namespace BookCat
                 OnPropertyChanged("CanEditBook");
             }
         }
-        public BitmapSource SelectedBookCover
+        /*public BitmapSource SelectedBookCover
         {
             get => selectedBookCover;
             set
@@ -87,7 +91,7 @@ namespace BookCat
                     selectedBook.Cover = selectedBookCover != null ? BitmapConvertorTools.BitmapSourceToByte(selectedBookCover) : null;
                 OnPropertyChanged("SelectedBookCover");
             }
-        }
+        }*/
         public bool NotEditMode => !editMode;
         public bool CanEditBook => selectedBook != null && !editMode;
 
@@ -101,6 +105,8 @@ namespace BookCat
                     (newBookCommand = new RelayCommand(obj =>
                     {
                         Book newBook = new Book();
+                        if (newBook.Cover == null)
+                            newBook.Cover = emptyBitmap;
                         SelectedBook = newBook;
                         EditMode = true;
                     }));
@@ -135,8 +141,11 @@ namespace BookCat
                     (editBookCommand = new RelayCommand(obj =>
                     {
                         editedBook = selectedBook;
-                        SelectedBook = new Book();
-                        SelectedBook.CopyFrom(editedBook);
+                        selectedBook = new Book();
+                        selectedBook.CopyFrom(editedBook);
+                        if (selectedBook.Cover == null)
+                            selectedBook.Cover = emptyBitmap;
+                        OnPropertyChanged("SelectedBook");
                         EditMode = true;
                     }));
             }
@@ -206,15 +215,27 @@ namespace BookCat
                      }));
             }
         }
-        protected RelayCommand showDBWindowCommand;//Показать настройки хранилища
-        public RelayCommand ShowDBWindowCommand
+        protected RelayCommand clearDBWindowCommand;//Показать настройки хранилища
+        public RelayCommand ClearDBWindowCommand
         {
             get
             {
-                return showDBWindowCommand ??
-                     (showDBWindowCommand = new RelayCommand(obj =>
+                return clearDBWindowCommand ??
+                     (clearDBWindowCommand = new RelayCommand(obj =>
                      {
-                        MessageBox.Show("Настройки базы данных");
+                        MessageBox.Show("Очистка базы данных");
+                     }));
+            }
+        }
+        protected RelayCommand fillDBWindowCommand;//Показать настройки хранилища
+        public RelayCommand FillDBWindowCommand
+        {
+            get
+            {
+                return fillDBWindowCommand ??
+                     (fillDBWindowCommand = new RelayCommand(obj =>
+                     {
+                         MessageBox.Show("Заполнение базы данных");
                      }));
             }
         }
@@ -237,7 +258,7 @@ namespace BookCat
                             bi.UriSource = new Uri(dialog.FileName, UriKind.RelativeOrAbsolute);
                             bi.DecodePixelWidth = 200;
                             bi.EndInit();
-                            SelectedBookCover = bi;
+                            SelectedBook.Cover = BitmapConvertorTools.BitmapSourceToByte(bi);
                         }
                     }));
             }
@@ -255,7 +276,7 @@ namespace BookCat
                                 "Внимание", MessageBoxButton.YesNo,
                                 MessageBoxImage.Warning) == MessageBoxResult.Yes)
                             {
-                                SelectedBook.Cover = null;// BitmapConvertorTools.BitmapSourceToByte(new BitmapImage());
+                                SelectedBook.Cover = emptyBitmap;
                             }
                     }));
             }

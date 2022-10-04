@@ -51,7 +51,8 @@
             <Button Command="{Binding NewBookCommand}" Width="90" >Добавить</Button>
             <Button Command="{Binding RemoveBookCommand}" Width="90" Visibility="{Binding CanEditBook, UpdateSourceTrigger=PropertyChanged,
                  Converter={StaticResource BooleanToVisibilityConverter}}">Удалить</Button>
-            <Button Command="{Binding ShowDBWindowCommand}" Width="90" HorizontalAlignment="Right">Настройки</Button>
+            <Button Command="{Binding ClearDBWindowCommand}" Width="120" HorizontalAlignment="Right">Очистить список</Button>
+            <Button Command="{Binding FillDBWindowCommand}" Width="120" HorizontalAlignment="Right">Заполнить список</Button>
         </StackPanel>
         <StackPanel Grid.Column="1" >
             <TextBlock Text="Выбранная книга"  Height="40"/>

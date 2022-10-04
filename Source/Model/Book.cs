@@ -14,15 +14,15 @@ namespace BookCat
         protected byte[] cover ;//Изображение обложки
         protected Person author;//Автор
 
-        public Book()
+        /*public Book()
         {
-            /*System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
+            System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
             bi.BeginInit();
-            bi.UriSource = new System.Uri("F:/Документы/WPF/Обложки/Крузо.jpg", System.UriKind.RelativeOrAbsolute);
+            bi.UriSource = new System.Uri("Image/Empty.jpg", System.UriKind.RelativeOrAbsolute);
             bi.DecodePixelWidth = 200;
             bi.EndInit();
-            cover = BitmapConvertorTools.BitmapSourceToByte((System.Windows.Media.Imaging.BitmapSource)bi);*/
-        }
+            cover = BitmapConvertorTools.BitmapSourceToByte((System.Windows.Media.Imaging.BitmapSource)bi);
+        }*/
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
