@@ -8,7 +8,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/defo.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/doil.jpg")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/empty.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/london.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/stvenson.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/zamyatina.jpg")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("packages/sqlitepclraw.lib.e_sqlite3.2.0.4/runtimes/win-x86/native/e_sqlite3.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("packages/sqlitepclraw.lib.e_sqlite3.2.0.4/runtimes/win-x64/native/e_sqlite3.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("packages/sqlitepclraw.lib.e_sqlite3.2.0.4/runtimes/win-arm/native/e_sqlite3.dll")]

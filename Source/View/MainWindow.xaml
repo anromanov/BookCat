@@ -20,6 +20,7 @@
             <Setter Property="Margin" Value="5" />
         </Style>
     </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -29,6 +30,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
+
+        <!--Список книг-->
         <ListBox Grid.Column="0" ItemsSource="{Binding BookList}" SelectedItem="{Binding SelectedBook}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -41,19 +44,30 @@
                             <TextBlock Grid.Column="0" Text="{Binding Path=Id}" />
                             <TextBlock Grid.Column="1" Text="{Binding Path=Author.ShortName}" />
                         </Grid>
-                        <TextBlock FontSize="18" Text="{Binding Path=Name}" />
-                        <TextBlock Text="{Binding Path=PublicationYear}" />
-                    </StackPanel>
+                        <TextBlock FontSize="18" Text="{Binding Path=Name}" MinWidth="200" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=PublicationYear}" />
+                            <TextBlock Text="         " FontSize="8"/>
+                            <TextBlock Text="ISBN" />
+                            <TextBlock Text="   " FontSize="8"/>
+                            <TextBlock Text="{Binding Path=ISBN, StringFormat='000-0-0000-0000-0'}"  />
+                        </StackPanel>
+                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+
+        <!--Кнопки под списком книг-->
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Command="{Binding NewBookCommand}" Width="90" >Добавить</Button>
             <Button Command="{Binding RemoveBookCommand}" Width="90" Visibility="{Binding CanEditBook, UpdateSourceTrigger=PropertyChanged,
                  Converter={StaticResource BooleanToVisibilityConverter}}">Удалить</Button>
+            <TextBlock Text="         " FontSize="12"/>
             <Button Command="{Binding ClearDBWindowCommand}" Width="120" HorizontalAlignment="Right">Очистить список</Button>
             <Button Command="{Binding FillDBWindowCommand}" Width="120" HorizontalAlignment="Right">Заполнить список</Button>
         </StackPanel>
+
+        <!--Панель подробного просмотра и редактирования книг-->
         <StackPanel Grid.Column="1" >
             <TextBlock Text="Выбранная книга"  Height="40"/>
             <Grid>
@@ -87,7 +101,7 @@
             <TextBlock FontSize="8"/>
             <TextBlock Text="Краткое содержание" />
             <TextBox Text="{Binding SelectedBook.Annotation, UpdateSourceTrigger=PropertyChanged}" 
-                     IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}" MinHeight="80"
+                     IsReadOnly="{Binding NotEditMode, UpdateSourceTrigger=PropertyChanged}" MinHeight="80" MaxHeight="200"
                       TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" AcceptsReturn="True"/>
             <TextBlock FontSize="8"/>
             <Grid>
@@ -104,6 +118,8 @@
             </Grid>
             <Image Source="{Binding SelectedBook.Cover, UpdateSourceTrigger=PropertyChanged}" Margin="20" HorizontalAlignment="Left" MaxHeight="300" />
         </StackPanel>
+
+        <!--Кнопки панели редактирования книг-->
         <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
             <Button Command="{Binding EditBookCommand}" Width="90" Visibility="{Binding CanEditBook, 
                 UpdateSourceTrigger=PropertyChanged,

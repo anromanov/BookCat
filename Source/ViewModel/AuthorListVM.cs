@@ -41,7 +41,7 @@ namespace BookCat
         public System.Action CloseAction { get; set; } //Дает возможность закрыть окно из ViewModel, задается в конструкторе окна
         public System.Action CloseChildAction { get; set; } //Дает возможность закрыть дочернее окно из ViewModel, задается в конструкторе окна
         public Person SelectedAuthor { get; set; }
-        protected RelayCommand selectAuthorCommand;//Выбрать автора из списка
+        protected RelayCommand selectAuthorCommand;//Выбрать автора из списка и вернуться в главное окно
         public RelayCommand SelectAuthorCommand
         {
             get
@@ -122,7 +122,7 @@ namespace BookCat
                      }));
             }
         }
-        protected RelayCommand saveAuthorCommand;//Удалить автора
+        protected RelayCommand saveAuthorCommand;//Сохранить созданного или редактируемого автора
         public RelayCommand SaveAuthorCommand
         {
             get

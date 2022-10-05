@@ -2,19 +2,14 @@
 namespace BookCat
 
 {
-    class ApplicationContext : DbContext
+    class ApplicationContext : DbContext //Соединение с БД
     {
-        public DbSet<Book> BookList { get; set; } = null;
-        public DbSet<Person> AuthorList { get; set; } = null;
-        public ApplicationContext()  
-        {
-            /*Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationContext>());
-            BookList = Set<Book>();
-            AuthorList = Set<Person>();*/
-        }
+        public DbSet<Book> BookList { get; set; } = null; //список книг в БД
+        public DbSet<Person> AuthorList { get; set; } = null; //список авторов в БД
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=bookcat.db");
+            optionsBuilder.UseSqlite("Data Source=bookcat.db"); //Проверить подключение, создать БД если ещё не
         }
     }
 }

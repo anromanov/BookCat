@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace BookCat
 {
@@ -19,6 +16,15 @@ namespace BookCat
 
             encoder.Save(stream);
             return stream.ToArray();
+        }
+        public static byte[] UriJpegToByte(Uri uri) 
+        {
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = uri;
+            bi.DecodePixelWidth = 200;
+            bi.EndInit();
+            return BitmapSourceToByte((BitmapSource)bi);
         }
         public static System.Windows.Media.Imaging.BitmapSource ByteToBitmapSource(byte[] bytes)
         {

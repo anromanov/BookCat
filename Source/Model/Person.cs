@@ -12,7 +12,7 @@ namespace BookCat
         protected string lastName;//Фамилия
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        public void OnPropertyChanged([CallerMemberName] string prop = "") //Для связки с представлением
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
@@ -50,9 +50,9 @@ namespace BookCat
             get
             {
                 string res = "";
-                if (firstName != null)
+                if (firstName != null && firstName.Length > 0)
                     res += firstName[0] + ". ";
-                if (middleName != null)
+                if (middleName != null && middleName.Length > 0)
                     res += middleName[0] + ". ";
                 return res + lastName;
             }

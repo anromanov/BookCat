@@ -6,6 +6,9 @@ namespace BookCat
     //Класс Книга -- основной класс модели
     class Book : INotifyPropertyChanged
     {
+        const long maxISBN13 = 9999999999999;
+        static protected int maxYear = System.DateTime.Now.Year;
+
         protected int id;//Уникальный идентификатор
         protected string name;//Название книги
         protected int publicationYear;//Год издания
@@ -14,17 +17,8 @@ namespace BookCat
         protected byte[] cover ;//Изображение обложки
         protected Person author;//Автор
 
-        /*public Book()
-        {
-            System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new System.Uri("Image/Empty.jpg", System.UriKind.RelativeOrAbsolute);
-            bi.DecodePixelWidth = 200;
-            bi.EndInit();
-            cover = BitmapConvertorTools.BitmapSourceToByte((System.Windows.Media.Imaging.BitmapSource)bi);
-        }*/
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        public void OnPropertyChanged([CallerMemberName] string prop = "")//Для связки с представлением
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
@@ -72,7 +66,8 @@ namespace BookCat
             get => publicationYear;
             set
             {
-                publicationYear = value;
+                if(value >= 0 && value <= maxYear)
+                    publicationYear = value;
                 OnPropertyChanged("PublicationYear");
             }
         }
@@ -81,7 +76,8 @@ namespace BookCat
             get => isbn;
             set
             {
-                isbn = value;
+                if (value >= 0 && value <= maxISBN13)
+                    isbn = value;
                 OnPropertyChanged("ISBN");
             }
         }

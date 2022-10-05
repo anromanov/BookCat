@@ -169,3 +169,8 @@ F:\Александр\Visual Studio Projects\BookCat\BookCat\obj\Debug\BookCat_C
 F:\Александр\Visual Studio Projects\BookCat\BookCat\obj\Debug\Source\View\AuthorsWindow.baml
 F:\Александр\Visual Studio Projects\BookCat\BookCat\obj\Debug\Source\View\MainWindow.baml
 F:\Александр\Visual Studio Projects\BookCat\BookCat\obj\Debug\Source\View\PersonEditWindow.baml
+F:\Документы\WPF\BookCat\bin\Debug\Image\Defo.jpg
+F:\Документы\WPF\BookCat\bin\Debug\Image\Doil.jpg
+F:\Документы\WPF\BookCat\bin\Debug\Image\London.jpg
+F:\Документы\WPF\BookCat\bin\Debug\Image\Stvenson.jpg
+F:\Документы\WPF\BookCat\bin\Debug\Image\Zamyatina.jpg

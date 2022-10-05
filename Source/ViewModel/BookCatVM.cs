@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace BookCat
 {
@@ -12,10 +11,9 @@ namespace BookCat
     {
         protected ApplicationContext db = new ApplicationContext();
         protected Book selectedBook;
-        protected Book editedBook;
-        //protected BitmapSource selectedBookCover; 
+        protected Book editedBook;//Для сохранения данных редактируемой книги на случай отмены изменений
         protected bool editMode = false;
-        protected byte[] emptyBitmap;
+        protected byte[] emptyBitmap;//Пустой белый JPEG, если у книги нет обложки, чтобы не сыпались исключения при выборе такой книги в списке
         protected readonly ObservableCollection<Book> bookList;
         public ReadOnlyObservableCollection<Book> BookList { get; }
         protected readonly ObservableCollection<Person> authorList;
@@ -27,27 +25,7 @@ namespace BookCat
             db.BookList.ToList();
             bookList = db.BookList.Local.ToObservableCollection();
             authorList = db.AuthorList.Local.ToObservableCollection();
-            System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new System.Uri("Image/Empty.jpg", System.UriKind.RelativeOrAbsolute);
-            bi.DecodePixelWidth = 200;
-            bi.EndInit();
-            emptyBitmap = BitmapConvertorTools.BitmapSourceToByte((System.Windows.Media.Imaging.BitmapSource)bi); BitmapImage em = new BitmapImage();
-                /*new ObservableCollection<Person>
-            {
-                new Person{FirstName = "Иван", MiddleName = "Иванович", LastName = "Иванов"},
-                new Person{FirstName = "Петр", MiddleName = "Петрович", LastName = "Петров"},
-                new Person{FirstName = "Карл", MiddleName = "Гансович", LastName = "Маркс"},
-                new Person{FirstName = "Сидор", MiddleName = "Сидорович", LastName = "Сидоров"},
-                new Person{FirstName = "Борис", MiddleName = "Борисович", LastName = "Борисов"}
-            };*/
-            /*{
-                new Book{Name ="Труды", Author = authorList[0], PublicationYear = 1996, Id = 1, ISBN = 1111111111},
-                new Book{Name ="Начало", Author = authorList[1], PublicationYear = 1956, Id = 2, ISBN = 222222222},
-                new Book{Name ="Капитал", Author = authorList[2], PublicationYear = 1973, Id = 3, ISBN = 333333333},
-                new Book{Name ="Собрание сочинений", Author = authorList[3], PublicationYear = 2002, Id = 4, ISBN = 444444444},
-                new Book{Name ="Избранное", Author = authorList[4], PublicationYear = 2021, Id = 5, ISBN = 555555555}
-            };*/
+            emptyBitmap = BitmapConvertorTools.UriJpegToByte(new Uri("Image/Empty.jpg", UriKind.RelativeOrAbsolute)); 
             BookList = new ReadOnlyObservableCollection<Book>(bookList);
         }
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -66,11 +44,10 @@ namespace BookCat
                     selectedBook = value;
                     OnPropertyChanged("SelectedBook");
                     OnPropertyChanged("CanEditBook");
-                    //selectedBookCover = (selectedBook != null && selectedBook.Cover != null ? BitmapConvertorTools.ByteToBitmapSource(selectedBook.Cover) : null);
                 }
             }
         }
-        public bool EditMode
+        public bool EditMode //Режим редактирование: доступны изменения текстовых полей и кнопка сохранения
         {
             get => editMode;
             private set
@@ -81,18 +58,7 @@ namespace BookCat
                 OnPropertyChanged("CanEditBook");
             }
         }
-        /*public BitmapSource SelectedBookCover
-        {
-            get => selectedBookCover;
-            set
-            {
-                selectedBookCover = value;
-                if(selectedBook != null)
-                    selectedBook.Cover = selectedBookCover != null ? BitmapConvertorTools.BitmapSourceToByte(selectedBookCover) : null;
-                OnPropertyChanged("SelectedBookCover");
-            }
-        }*/
-        public bool NotEditMode => !editMode;
+        public bool NotEditMode => !editMode; //Это чтобы не писать пока BoolNegConvertor
         public bool CanEditBook => selectedBook != null && !editMode;
 
         //=========================Команды=============================================
@@ -168,7 +134,6 @@ namespace BookCat
                         }
                         else
                         {
-                            //bookList.Insert(0, selectedBook);
                             db.BookList.Add(selectedBook);
                             db.SaveChanges();
                         }
@@ -215,7 +180,7 @@ namespace BookCat
                      }));
             }
         }
-        protected RelayCommand clearDBWindowCommand;//Показать настройки хранилища
+        protected RelayCommand clearDBWindowCommand;//Очистить БД
         public RelayCommand ClearDBWindowCommand
         {
             get
@@ -223,11 +188,19 @@ namespace BookCat
                 return clearDBWindowCommand ??
                      (clearDBWindowCommand = new RelayCommand(obj =>
                      {
-                        MessageBox.Show("Очистка базы данных");
+                         if (MessageBox.Show("Очистить все таблицы данных?",
+                                 "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                             if (MessageBox.Show("Все данные будут стерты без возможности восстановления.\n Вы действительно хотите продолжить?",
+                                 "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                             {
+                                 db.AuthorList.Local.Clear();
+                                 db.BookList.Local.Clear();
+                                 db.SaveChanges();
+                             }
                      }));
             }
         }
-        protected RelayCommand fillDBWindowCommand;//Показать настройки хранилища
+        protected RelayCommand fillDBWindowCommand;//Заполнить БД примерами
         public RelayCommand FillDBWindowCommand
         {
             get
@@ -235,7 +208,67 @@ namespace BookCat
                 return fillDBWindowCommand ??
                      (fillDBWindowCommand = new RelayCommand(obj =>
                      {
-                         MessageBox.Show("Заполнение базы данных");
+                         if (MessageBox.Show("Очистить все таблицы данных и заполнить примерами?",
+                                 "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                             if (MessageBox.Show("Все данные будут стерты без возможности восстановления \n и заменены данными примеров.\n " +
+                                 "Вы действительно хотите продолжить?",
+                                 "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                             {
+                                 db.AuthorList.Local.Clear();
+                                 db.BookList.Local.Clear();
+                                 db.SaveChanges();
+
+                                 db.AuthorList.AddRange(new Person[]
+                                 {
+                                    new Person { FirstName = "Джек", MiddleName = "", LastName = "Лондон" },
+                                    new Person { FirstName = "Роберт", MiddleName = "Льюис", LastName = "Стивенсон" },
+                                    new Person { FirstName = "Артур", MiddleName = "Конан", LastName = "Дойл" },
+                                    new Person { FirstName = "Ольга", MiddleName = "Александровна", LastName = "Замятина" },
+                                    new Person { FirstName = "Даниэль", MiddleName = "", LastName = "Дефо" } 
+                                 });
+
+                                 db.BookList.AddRange(new Book[]
+                                     {
+                                        new Book{Name ="Белый клык", Author = authorList[0], PublicationYear = 2022, ISBN = 9785928734688, 
+                                        Cover = BitmapConvertorTools.UriJpegToByte(new Uri("Image/London.jpg", UriKind.RelativeOrAbsolute)),
+                                        Annotation = "Белый Клык, полусобака-полуволк, родился на Аляске. Он жил в индейском племени и бегал в упряжке, " +
+                                        "в форте Юкон его на потеху публике стравливали с другими собаками. Люди обращались с Белым Клыком жестоко, " +
+                                        "и он превратился в свирепого, опасного и мстительного зверя. Во время одного из собачьих боев за него вступился " +
+                                        "горный инженер Уидон Скотт; он выкупил полумертвого пса у прежнего хозяина и забрал с собой. " +
+                                        "Терпением и добротой Уидону Скотту удалось заслужить доверие Белого Клыка и стать ему другом.\n Для детей 12-14 лет."},
+
+                                        new Book{Name ="Остров Сокровищ", Author = authorList[1], PublicationYear = 2022, ISBN = 9785928734756,
+                                        Cover = BitmapConvertorTools.UriJpegToByte(new Uri("Image/Stvenson.jpg", UriKind.RelativeOrAbsolute)),
+                                        Annotation = "Джим Хокинс находит в сундуке бывалого моряка карту, которая указывает на настоящий пиратский тайник. " +
+                                        "А значит, Джима и его друзей ждут невероятные приключения. Шхуна \"Испаньола\" не медля пустится в плавание к острову Сокровищ. " +
+                                        "И чтобы справиться со всеми опасностями, путешественникам придется рисковать, отважно сражаться, идти на хитрость, " +
+                                        "не забывая о чести, и иногда полагаться на волю случая.\n Для детей 12-14 лет."},
+
+                                        new Book{Name ="Приключения Шерлока Холмса", Author = authorList[2], PublicationYear = 2019, ISBN = 9785928728366,
+                                        Cover = BitmapConvertorTools.UriJpegToByte(new Uri("Image/Doil.jpg", UriKind.RelativeOrAbsolute)),
+                                        Annotation = "Пять рассказов Артура Конан-Дойла о Шерлоке Холмсе и докторе Уотсоне снабжены подробным историко-бытовым комментарием. " +
+                                        "Читателя ждет погружение в лондонскую жизнь конца XIX века: в комментариях - история и география Британии, " +
+                                        "достижения медицины и традиции образования, мода и транспорт рубежа веков, увлекательная история криминалистики: " +
+                                        "известные преступники и прославленные сыщики, отпечатки пальцев и следы обуви, грим и маскировка, яды и оружие."},
+
+                                        new Book{Name ="Ничья", Author = authorList[3], PublicationYear = 2022, ISBN =  9785907362796,
+                                        Cover = BitmapConvertorTools.UriJpegToByte(new Uri("Image/Zamyatina.jpg", UriKind.RelativeOrAbsolute)),
+                                        Annotation = "Когда ты маленький, мир кажется простым и понятным. Так было и в жизни Ксюши: любимые родители и младшая сестрёнка, " +
+                                        "лучшая подруга и хорошие оценки в школе. Неужели что-то может измениться? Тринадцатый день рождения приносит с собой сомнения: " +
+                                        "а что, если родные всё это время лгали ей… Девочка пересмотрела кипу документов, выучила наизусть мамину соцсеть " +
+                                        "с момента своего появления на свет и попыталась выведать у крёстной все тайны. Кажется, Ксюша затеяла игру с родителями, " +
+                                        "вот только они об этом даже не догадываются. Будет ли здесь победитель? Или их ждёт Ничья?"},
+
+                                        new Book{Name ="Жизнь и удивительные приключения морехода Робинзона Крузо", Author = authorList[4], PublicationYear = 2022,
+                                        Cover = BitmapConvertorTools.UriJpegToByte(new Uri("Image/Defo.jpg", UriKind.RelativeOrAbsolute)), 
+                                        ISBN = 9785928727376, Annotation = "Знаменитый роман английского писателя Даниэля Дэфо был написан более 300 лет назад, " +
+                                        "но удивительная судьба Робинзона Крузо и сегодня вызывает интерес и сочувствие у читателей. Его предприимчивость, трудолюбие, " +
+                                        "вера в собственные силы достойны уважения независимо от смены эпох и нравов.\n Роман печатается в классическом пересказе " +
+                                        "Корнея Чуковского с великолепными иллюстрациями Вадима Челака. \n Пересказ с английскогои предисловие Корнея Чуковского.\n" +
+                                        "Для детей 7-10 лет."}
+                                    });
+                                 db.SaveChanges();
+                             }
                      }));
             }
         }
@@ -249,21 +282,16 @@ namespace BookCat
                     {
                         var dialog = new Microsoft.Win32.OpenFileDialog();
                         dialog.DefaultExt = ".jpg"; 
-                        dialog.Filter = "Изображения (.jpg)|*.jpg"; // Filter files by extension
+                        dialog.Filter = "Изображения (.jpg)|*.jpg"; // Только JPEG
 
                         if ((bool)dialog.ShowDialog())
                         {
-                            System.Windows.Media.Imaging.BitmapImage bi = new System.Windows.Media.Imaging.BitmapImage();
-                            bi.BeginInit();
-                            bi.UriSource = new Uri(dialog.FileName, UriKind.RelativeOrAbsolute);
-                            bi.DecodePixelWidth = 200;
-                            bi.EndInit();
-                            SelectedBook.Cover = BitmapConvertorTools.BitmapSourceToByte(bi);
+                            SelectedBook.Cover = BitmapConvertorTools.UriJpegToByte(new Uri(dialog.FileName, UriKind.RelativeOrAbsolute));
                         }
                     }));
             }
         }
-        protected RelayCommand removeCoverImageCommand;
+        protected RelayCommand removeCoverImageCommand;//Удалить изображение обложки
         public RelayCommand RemoveCoverImageCommand
         {
             get
